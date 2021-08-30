@@ -3,7 +3,7 @@ import Image from 'next/image'
 import styles from '../styles/Home.module.css'
 import LaunchDarkly from 'launchdarkly-node-server-sdk'
 
-const client = LaunchDarkly.init('sdk-c46b880d-5973-48ed-9f01-838029b10e99')
+const client = LaunchDarkly.init(process.env.LAUCHDARKLY_SDK)
 
 export default function Home({message}) {
   return (
