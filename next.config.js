@@ -8,9 +8,9 @@ module.exports = {
     }
     config.module.rules.push({
       test: /\.md$/,
-      use: 'raw-loader',
-    })
-    config.experiments = {topLevelAwait: true}
+      use: "raw-loader",
+    });
+    config.experiments = { topLevelAwait: true };
     return config;
-  }
-}
+  },
+};
