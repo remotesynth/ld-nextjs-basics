@@ -1,10 +1,6 @@
 import Head from 'next/head'
 import styles from '../styles/Home.module.css'
-import LaunchDarkly from 'launchdarkly-node-server-sdk'
-
-console.log(process.env.LAUNCHDARKLY_SDK)
-
-const client = LaunchDarkly.init(process.env.LAUNCHDARKLY_SDK)
+import {client} from '../lib/ld-server'
 
 export default function Home({message}) {
   return (
@@ -26,7 +22,6 @@ export default function Home({message}) {
 
 export async function getStaticProps() {
   let message = "Nothing returned"
-  await client.waitForInitialization();
   let showFeature = await client.variation("test-flag", {"key":"brian@launchdarkly.com"}, false)
   if (showFeature) {
   message = "The flag is on"
