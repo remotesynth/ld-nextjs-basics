@@ -1,6 +1,6 @@
 import Head from "next/head";
 import styles from "../styles/Home.module.css";
-import { client } from "../lib/ld-server";
+import { getClient } from "../lib/ld-server";
 
 export default function Home({ message }) {
   return (
@@ -19,6 +19,7 @@ export default function Home({ message }) {
 }
 
 export async function getStaticProps() {
+  const client = await getClient();
   let message = "Nothing returned";
   let showFeature = await client.variation(
     "test-flag",

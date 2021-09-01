@@ -1,8 +1,8 @@
-import { client } from "../lib/ld-server";
 import matter from "gray-matter";
 import ReactMarkdown from "react-markdown";
 import styles from "../styles/Home.module.css";
 import Head from "next/head";
+import { getClient } from "../lib/ld-server";
 
 export default function About({ frontmatter, markdownBody }) {
   return (
@@ -22,6 +22,7 @@ export default function About({ frontmatter, markdownBody }) {
 }
 
 export async function getStaticProps() {
+  const client = await getClient();
   let loadPage = await client.variation(
     "new-about-us",
     { key: "brian@launchdarkly.com" },
