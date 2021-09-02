@@ -22,7 +22,7 @@ export default function Home({ message }) {
           </p>
         ) : (
           <p>
-            <em>About Us link is Off</em>
+            <em>About Us link is off</em>
           </p>
         )}
       </main>
