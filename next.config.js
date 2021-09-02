@@ -1,5 +1,8 @@
 module.exports = {
   reactStrictMode: true,
+  env: {
+    LAUNCHDARKLY_SDK_CLIENT: process.env.LAUNCHDARKLY_SDK_CLIENT,
+  },
   webpack: (config, { isServer }) => {
     if (!isServer) {
       config.resolve.fallback.fs = false;

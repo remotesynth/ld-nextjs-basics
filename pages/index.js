@@ -1,8 +1,11 @@
 import Head from "next/head";
+import Link from "next/link";
 import styles from "../styles/Home.module.css";
 import { getClient } from "../lib/ld-server";
+import { useFlags } from "launchdarkly-react-client-sdk";
 
 export default function Home({ message }) {
+  let { showAboutUs } = useFlags();
   return (
     <div className={styles.container}>
       <Head>
@@ -13,6 +16,15 @@ export default function Home({ message }) {
 
       <main className={styles.main}>
         <h1 className={styles.title}>{message}</h1>
+        {showAboutUs ? (
+          <p>
+            <Link href="/about">About Us</Link>
+          </p>
+        ) : (
+          <p>
+            <em>About Us link is Off</em>
+          </p>
+        )}
       </main>
     </div>
   );

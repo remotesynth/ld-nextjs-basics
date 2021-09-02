@@ -2,6 +2,7 @@ import matter from "gray-matter";
 import ReactMarkdown from "react-markdown";
 import styles from "../styles/Home.module.css";
 import Head from "next/head";
+import Link from "next/link";
 import { getClient } from "../lib/ld-server";
 
 export default function About({ frontmatter, markdownBody }) {
@@ -16,6 +17,9 @@ export default function About({ frontmatter, markdownBody }) {
       <main className={styles.main}>
         <h1 className={styles.title}>{frontmatter.title}</h1>
         <ReactMarkdown>{markdownBody}</ReactMarkdown>
+        <p>
+          <Link href="/">Home</Link>
+        </p>
       </main>
     </div>
   );
