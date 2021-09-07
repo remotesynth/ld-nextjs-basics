@@ -4,7 +4,7 @@ import Link from "next/link";
 import { getClient } from "../../lib/ld-server";
 import fetch from "node-fetch";
 
-export default function About({ title, description }) {
+export default function About({ title, description, message }) {
   return (
     <div className={styles.container}>
       <Head>
@@ -14,7 +14,8 @@ export default function About({ title, description }) {
       </Head>
 
       <main className={styles.main}>
-        <h1 className={styles.title}>{title}</h1>
+        <h1>{message}</h1>
+        <h2 className={styles.title}>{title}</h2>
         <p>{description}</p>
         <p>
           <Link href="/">Home</Link>
@@ -52,6 +53,12 @@ export async function getStaticPaths() {
 }
 
 export async function getStaticProps({ ...ctx }) {
+  const client = await getClient();
+  let message = await client.variation(
+    "dpr-message",
+    { key: "brian@launchdarkly.com" },
+    false
+  );
   let fullSlug = ctx.params.slug.join("/");
   const response = await fetch(`https://dev.to/api/articles/${fullSlug}`);
   const data = await response.json();
@@ -59,6 +66,7 @@ export async function getStaticProps({ ...ctx }) {
     props: {
       title: data.title,
       description: data.description,
+      message: message,
     },
   };
 }
