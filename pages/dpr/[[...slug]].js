@@ -5,7 +5,6 @@ import { getClient } from "../../lib/ld-server";
 import fetch from "node-fetch";
 import Nav from "../../components/nav";
 import ReactMarkdown from "react-markdown";
-import { source } from "axe-core";
 
 export default function About({ post }) {
   return (
@@ -33,7 +32,7 @@ export async function getStaticPaths() {
     false
   );
 
-  // only grab the first 10 to prerender
+  // only grab the first 5 to prerender
   const top = 5;
   const response = await fetch(
     `https://dev.to/api/articles?username=${username}&page=1&per_page=${top}`

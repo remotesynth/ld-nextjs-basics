@@ -1,5 +1,5 @@
 ---
-title: All About Us
+title: About Us!
 ---
 
-Teams use LaunchDarkly to innovate faster, reduce risk, and break down the barriers between developer, product, marketing and sales.
+This is our new about us page featuing our new branding and more flowery marketing language.

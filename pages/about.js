@@ -4,8 +4,11 @@ import styles from "../styles/Home.module.css";
 import Head from "next/head";
 import Link from "next/link";
 import { getClient } from "../lib/ld-server";
+import ErrorPage from "next/error";
+import Nav from "../components/nav";
 
-export default function About({ frontmatter, markdownBody }) {
+export default function About({ frontmatter, markdownBody, showPage }) {
+  if (!showPage) return <ErrorPage statusCode="404" />;
   return (
     <div className={styles.container}>
       <Head>
@@ -15,6 +18,7 @@ export default function About({ frontmatter, markdownBody }) {
       </Head>
 
       <main className={styles.main}>
+        <Nav />
         <h1 className={styles.title}>{frontmatter.title}</h1>
         <ReactMarkdown>{markdownBody}</ReactMarkdown>
         <p>
@@ -27,17 +31,30 @@ export default function About({ frontmatter, markdownBody }) {
 
 export async function getStaticProps() {
   const client = await getClient();
-  let loadPage = await client.variation(
-    "new-about-us",
+  let showPage = await client.variation(
+    "show-about-us",
     { key: "brian@launchdarkly.com" },
     false
   );
-  const content = await import(`../content/${loadPage}.md`);
-  const data = matter(content.default);
+  let loadPage = "";
+  let frontMatter = "";
+  let markdownBody = "";
+  if (showPage) {
+    let loadPage = await client.variation(
+      "new-about-us",
+      { key: "brian@launchdarkly.com" },
+      false
+    );
+    const content = await import(`../content/${loadPage}.md`);
+    const data = matter(content.default);
+    frontMatter = data.data;
+    markdownBody = data.content;
+  }
   return {
     props: {
-      frontmatter: data.data,
-      markdownBody: data.content,
+      frontmatter: frontMatter,
+      markdownBody: markdownBody,
+      showPage: showPage,
     },
   };
 }
