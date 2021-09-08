@@ -1,11 +1,11 @@
 import Head from "next/head";
 import Link from "next/link";
 import styles from "../styles/Home.module.css";
+import fetch from "node-fetch";
 import { getClient } from "../lib/ld-server";
-import { useFlags } from "launchdarkly-react-client-sdk";
+import Nav from "../components/nav";
 
-export default function Home({ message }) {
-  let { showAboutUs } = useFlags();
+export default function Home({ posts }) {
   return (
     <div className={styles.container}>
       <Head>
@@ -15,16 +15,26 @@ export default function Home({ message }) {
       </Head>
 
       <main className={styles.main}>
-        <h1 className={styles.title}>{message}</h1>
-        {showAboutUs ? (
-          <p>
-            <Link href="/about">About Us</Link>
-          </p>
-        ) : (
-          <p>
-            <em>About Us link is off</em>
-          </p>
-        )}
+        <Nav />
+        <h1 className={styles.title}>Featured Blog Posts</h1>
+        <ul>
+          {posts.map((post, index) => {
+            let username = post.organization
+              ? post.organization.username
+              : post.user.username;
+            let slug = `/dpr/${username}/${post.slug}`;
+            return (
+              <li key={index}>
+                <Link href={slug}>
+                  <a>
+                    <strong>{post.title}</strong>
+                  </a>
+                </Link>
+                <p>{post.description}</p>
+              </li>
+            );
+          })}
+        </ul>
       </main>
     </div>
   );
@@ -32,20 +42,18 @@ export default function Home({ message }) {
 
 export async function getStaticProps() {
   const client = await getClient();
-  let message = "Nothing returned";
-  let showFeature = await client.variation(
-    "test-flag",
+  let featuredUsername = await client.variation(
+    "featured-username",
     { key: "brian@launchdarkly.com" },
     false
   );
-  if (showFeature) {
-    message = "The flag is on";
-  } else {
-    message = "The flag is off";
-  }
+  const response = await fetch(
+    `https://dev.to/api/articles?username=${featuredUsername}&page=1&per_page=10`
+  );
+  const data = await response.json();
   return {
     props: {
-      message,
+      posts: data,
     },
   };
 }

@@ -3,8 +3,9 @@ import Head from "next/head";
 import Link from "next/link";
 import { getClient } from "../lib/ld-server";
 import fetch from "node-fetch";
+import Nav from "../components/nav";
 
-export default function About({ title, description }) {
+export default function About({ featuredCategory, posts }) {
   return (
     <div className={styles.container}>
       <Head>
@@ -14,11 +15,26 @@ export default function About({ title, description }) {
       </Head>
 
       <main className={styles.main}>
-        <h1 className={styles.title}>{title}</h1>
-        <p>{description}</p>
-        <p>
-          <Link href="/">Home</Link>
-        </p>
+        <Nav />
+        <h1 className={styles.title}>Posts for: {featuredCategory}</h1>
+        <ul>
+          {posts.map((post, index) => {
+            let username = post.organization
+              ? post.organization.username
+              : post.user.username;
+            let slug = `/dpr/${username}/${post.slug}`;
+            return (
+              <li key={index}>
+                <Link href={slug}>
+                  <a>
+                    <strong>{post.title}</strong>
+                  </a>
+                </Link>
+                <p>{post.description}</p>
+              </li>
+            );
+          })}
+        </ul>
       </main>
     </div>
   );
@@ -33,13 +49,13 @@ export async function getServerSideProps() {
   );
 
   const response = await fetch(
-    `https://dev.to/api/articles?tag=${featuredCategory}&top=1&per_page=1`
+    `https://dev.to/api/articles?tag=${featuredCategory}&page=1&per_page=5`
   );
   const data = await response.json();
   return {
     props: {
-      title: data[0].title,
-      description: data[0].description,
+      featuredCategory: featuredCategory,
+      posts: data,
     },
   };
 }

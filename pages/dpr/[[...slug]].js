@@ -3,8 +3,11 @@ import Head from "next/head";
 import Link from "next/link";
 import { getClient } from "../../lib/ld-server";
 import fetch from "node-fetch";
+import Nav from "../../components/nav";
+import ReactMarkdown from "react-markdown";
+import { source } from "axe-core";
 
-export default function About({ title, description, message }) {
+export default function About({ post }) {
   return (
     <div className={styles.container}>
       <Head>
@@ -14,19 +17,21 @@ export default function About({ title, description, message }) {
       </Head>
 
       <main className={styles.main}>
-        <h1>{message}</h1>
-        <h2 className={styles.title}>{title}</h2>
-        <p>{description}</p>
-        <p>
-          <Link href="/">Home</Link>
-        </p>
+        <Nav />
+        <h1 className={styles.title}>{post.title}</h1>
+        <ReactMarkdown>{post.body_markdown}</ReactMarkdown>
       </main>
     </div>
   );
 }
 
 export async function getStaticPaths() {
-  const username = "remotesynth";
+  const client = await getClient();
+  let username = await client.variation(
+    "featured-username",
+    { key: "brian@launchdarkly.com" },
+    false
+  );
 
   // only grab the first 10 to prerender
   const top = 5;
@@ -36,15 +41,12 @@ export async function getStaticPaths() {
   const data = await response.json();
 
   const paths = data.map((post) => {
-    console.log(post.username);
     let username = post.organization
       ? post.organization.username
       : post.user.username;
     let slug = `/dpr/${username}/${post.slug}`;
     return slug;
   });
-
-  console.log(paths);
 
   return {
     paths: paths,
@@ -53,20 +55,12 @@ export async function getStaticPaths() {
 }
 
 export async function getStaticProps({ ...ctx }) {
-  const client = await getClient();
-  let message = await client.variation(
-    "dpr-message",
-    { key: "brian@launchdarkly.com" },
-    false
-  );
   let fullSlug = ctx.params.slug.join("/");
   const response = await fetch(`https://dev.to/api/articles/${fullSlug}`);
   const data = await response.json();
   return {
     props: {
-      title: data.title,
-      description: data.description,
-      message: message,
+      post: data,
     },
   };
 }
