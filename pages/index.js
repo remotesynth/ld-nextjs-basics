@@ -5,7 +5,7 @@ import fetch from "node-fetch";
 import { getClient } from "../lib/ld-server";
 import Nav from "../components/nav";
 
-export default function Home({ posts }) {
+export default function Home({ featuredUsername, posts }) {
   return (
     <div className={styles.container}>
       <Head>
@@ -16,7 +16,9 @@ export default function Home({ posts }) {
 
       <main className={styles.main}>
         <Nav />
-        <h1 className={styles.title}>Featured Blog Posts</h1>
+        <h1 className={styles.title}>
+          Featured Blog Posts for: {featuredUsername}
+        </h1>
         <ul>
           {posts.map((post, index) => {
             let username = post.organization
@@ -53,6 +55,7 @@ export async function getStaticProps() {
   const data = await response.json();
   return {
     props: {
+      featuredUsername: featuredUsername,
       posts: data,
     },
   };
