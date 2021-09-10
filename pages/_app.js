@@ -7,7 +7,4 @@ function MyApp({ Component, pageProps }) {
 
 export default withLDProvider({
   clientSideID: process.env.LAUNCHDARKLY_SDK_CLIENT,
-  user: {
-    key: "brian@launchdarkly.com",
-  },
 })(MyApp);
