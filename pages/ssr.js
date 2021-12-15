@@ -44,7 +44,7 @@ export async function getServerSideProps() {
   const client = await getClient();
   let featuredCategory = await client.variation(
     "featured-category",
-    { key: "brian@launchdarkly.com" },
+    { key: "anonymous" },
     false
   );
 

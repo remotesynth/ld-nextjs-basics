@@ -46,7 +46,7 @@ export async function getStaticProps() {
   const client = await getClient();
   let featuredUsername = await client.variation(
     "featured-username",
-    { key: "brian@launchdarkly.com" },
+    { key: "anonymous" },
     false
   );
   const response = await fetch(
