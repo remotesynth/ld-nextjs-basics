@@ -33,7 +33,7 @@ export async function getStaticProps() {
   const client = await getClient();
   let showPage = await client.variation(
     "show-about-us",
-    { key: "brian@launchdarkly.com" },
+    { key: "anonymous" },
     false
   );
   let loadPage = "";
@@ -42,7 +42,7 @@ export async function getStaticProps() {
   if (showPage) {
     let loadPage = await client.variation(
       "new-about-us",
-      { key: "brian@launchdarkly.com" },
+      { key: "anonymous" },
       false
     );
     const content = await import(`../content/${loadPage}.md`);
