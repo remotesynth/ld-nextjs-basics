@@ -40,7 +40,7 @@ export async function getStaticProps() {
   let frontMatter = "";
   let markdownBody = "";
   if (showPage) {
-    let loadPage = await client.variation(
+    loadPage = await client.variation(
       "new-about-us",
       { key: "anonymous" },
       false
